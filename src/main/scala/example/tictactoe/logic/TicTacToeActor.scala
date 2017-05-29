@@ -10,11 +10,12 @@ class TicTacToeActor extends Actor with TicTacToeActorImpl {
       if (!marked) {
         return RepeatCurrentMove
       } else {
+        updatePlays
         println(displayBoard)
       }
     }
     val won = ifWins()
-    if (won || getPlays == 8) {
+    if (won || getPlays == 9) {
       if (!won) {
         println("Game Over - Draw")
       } else {
@@ -37,7 +38,7 @@ class TicTacToeActor extends Actor with TicTacToeActorImpl {
         case RepeatCurrentMove =>
           self ! Play
         case ExecuteNextMove =>
-          setPlayerTurnIndex
+          updatePlayerTurnIndex
           self ! Play
         case StopGame => self ! GameOver
       }

@@ -20,7 +20,7 @@ trait TicTacToeActorImpl {
 
   def setPlayers(plrs: Array[Player]): Unit = Array.copy(plrs, 0, players, 0, 2)
 
-  def setPlayerTurnIndex = {
+  def updatePlayerTurnIndex = {
     if (playerTurnIndex == 0) {
       playerTurnIndex = 1
     } else {
@@ -30,7 +30,7 @@ trait TicTacToeActorImpl {
 
   def getPlays: Int = noOfPlays
 
-  def setPlays = noOfPlays += 1
+  def updatePlays = noOfPlays += 1
 
   private def checkingRows(): Boolean = {
     var current = board(0)(0)
