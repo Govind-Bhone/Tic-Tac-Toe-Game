@@ -44,7 +44,7 @@ object Main extends App {
   //shutdown hook
   Runtime.getRuntime.addShutdownHook(new Thread() {
     override def run() {
-      system.whenTerminated
+      println("Tic-Tac-Toe System is shutting down ")
     }
   })
 

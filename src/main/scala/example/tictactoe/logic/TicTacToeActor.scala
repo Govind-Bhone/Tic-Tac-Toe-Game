@@ -1,15 +1,14 @@
 package example.tictactoe.logic
 
-import akka.actor.{Actor, ActorSystem}
-import example.tictactoe.main.Main
+import akka.actor.{Actor}
 
 class TicTacToeActor extends Actor with TicTacToeActorImpl {
 
-  def placeAt(pos: Int): Boolean = {
+  def placeAt(pos: Int): ControlMessages = {
     if (!ifWins() && getPlays < 9) {
       val marked = placeMarker(pos)
       if (!marked) {
-        return false
+        return RepeatCurrentMove
       } else {
         println(displayBoard)
       }
@@ -21,10 +20,9 @@ class TicTacToeActor extends Actor with TicTacToeActorImpl {
       } else {
         println("Game Over - " + currentPlayer.name + " WINS!!!")
       }
-      self ! GameOver
-      return false
+      return StopGame
     }
-    return true
+    return ExecuteNextMove
   }
 
   override def receive: Receive = {
@@ -34,13 +32,15 @@ class TicTacToeActor extends Actor with TicTacToeActorImpl {
     case Play =>
       currentPlayer.reference ! PlayYourMoves
     case PlaceAt(pos: Int) =>
-      val continueNextMove = placeAt(pos)
-      if (continueNextMove) {
-        setPlayerTurnIndex
-        self ! Play
-      } else {
-        self ! Play
+      val status = placeAt(pos)
+      status match {
+        case RepeatCurrentMove =>
+          self ! Play
+        case ExecuteNextMove =>
+          setPlayerTurnIndex
+          self ! Play
+        case StopGame => self ! GameOver
       }
-    case GameOver => System.exit(0)
+    case GameOver => context.system.terminate()
   }
 }

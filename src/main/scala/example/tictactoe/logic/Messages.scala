@@ -19,3 +19,10 @@ case object PlayYourMoves extends TicTacToeMessage
 case object GameOver extends TicTacToeMessage
 
 case class PlaceAt(squarePosition: Int) extends TicTacToeMessage
+
+
+
+sealed trait ControlMessages
+case object ExecuteNextMove extends ControlMessages
+case object RepeatCurrentMove extends ControlMessages
+case object StopGame extends ControlMessages
